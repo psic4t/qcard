@@ -1,0 +1,10 @@
+{
+	"Addressbooks": [
+		{
+			"Url":"https://my.server.de/calendar/",
+			"Username":"username",
+			"Password":"supersecret"
+		}
+	],
+        "DetailThreshold": 3
+}
