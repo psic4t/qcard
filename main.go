@@ -11,7 +11,7 @@ import (
 	"os"
 	"regexp"
 	"sort"
-	"strconv"
+	//"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -66,11 +66,11 @@ func fetchAbData(abNo int, wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func showAddresses(singleAB string) {
+func showAddresses(abNo int) {
 	var wg sync.WaitGroup            // use waitgroups to fetch calendars in parallel
 	wg.Add(len(config.Addressbooks)) // waitgroup length = num calendars
 	for i := range config.Addressbooks {
-		if singleAB == fmt.Sprintf("%v", i) || singleAB == "all" { // sprintf because convert int to string
+		if abNo == i || abNo == 1000 {
 			go fetchAbData(i, &wg)
 		} else {
 			wg.Done()
@@ -96,7 +96,7 @@ func showAddresses(singleAB string) {
 	}
 }
 
-func createContact(abNo string, contactData string) {
+func createContact(abNo int, contactData string) {
 	//dataArr := strings.Split(appointmentData, " ")
 	curTime := time.Now()
 	d := regexp.MustCompile(`\s[a-z,A-Z]:`)
@@ -183,10 +183,8 @@ END:VCARD`
 
 	newElem := newUUID + `.vcf`
 
-	abNo1, _ := strconv.ParseInt(abNo, 0, 64)
-
-	req, _ := http.NewRequest("PUT", config.Addressbooks[abNo1].Url+newElem, strings.NewReader(contactSkel))
-	req.SetBasicAuth(config.Addressbooks[abNo1].Username, config.Addressbooks[abNo1].Password)
+	req, _ := http.NewRequest("PUT", config.Addressbooks[abNo].Url+newElem, strings.NewReader(contactSkel))
+	req.SetBasicAuth(config.Addressbooks[abNo].Username, config.Addressbooks[abNo].Password)
 	req.Header.Add("Content-Type", "application/xml; charset=utf-8")
 
 	cli := &http.Client{}
@@ -201,16 +199,16 @@ END:VCARD`
 }
 
 func main() {
-	/*if strings.Contains(os.Args[1], "-") == false {
-		fmt.Println(os.Args[1])
-	}*/
 	toFile := false
 
-	flag.StringVar(&filter, "s", os.Args[1], "Search term")
+	if len(os.Args[1:]) > 0 {
+		searchterm = os.Args[1]
+	}
+	flag.StringVar(&filter, "s", "", "Search term")
 	//flag.BoolVar(&showInfo, "i", false, "Show additional info like description and location for contacts")
 	flag.BoolVar(&showFilename, "f", false, "Show contact filename for editing or deletion")
 	flag.BoolVar(&displayFlag, "p", false, "Print VCF file piped to qcard (for CLI mail tools like mutt)")
-	abNumber := flag.String("a", "all", "Show only single addressbook (number)")
+	abNo := flag.Int("a", 0, "Show only single addressbook (number).")
 	version := flag.Bool("v", false, "Show version")
 	showAddressbooks := flag.Bool("l", false, "List configured addressbooks with their corresponding numbers (for \"-a\")")
 	contactFile := flag.String("u", "", "Upload contact file. Provide filename and use with \"-c\"")
@@ -227,23 +225,23 @@ func main() {
 	if flagset["l"] {
 		getAbList()
 	} else if flagset["delete"] {
-		deleteContact(*abNumber, *contactDelete)
+		deleteContact(*abNo, *contactDelete)
 	} else if flagset["d"] {
-		dumpContact(*abNumber, *contactDump, toFile)
+		dumpContact(*abNo, *contactDump, toFile)
 	} else if flagset["p"] {
 		displayVCF()
 	} else if flagset["n"] {
-		createContact(*abNumber, *contactNew)
+		createContact(*abNo, *contactNew)
 	} else if flagset["edit"] {
-		editContact(*abNumber, *contactEdit)
+		editContact(*abNo, *contactEdit)
 	} else if flagset["u"] {
 		contactEdit := false
-		uploadVCF(*abNumber, *contactFile, contactEdit)
+		uploadVCF(*abNo, *contactFile, contactEdit)
 	} else if *version {
-		fmt.Print("qcard ")
-		fmt.Println(qcardversion)
+		fmt.Println("qcard " + qcardversion)
+	} else if flagset["a"] {
+		showAddresses(*abNo)
 	} else {
-		//filter = os.Args[1]
-		showAddresses(*abNumber)
+		showAddresses(1000)
 	}
 }

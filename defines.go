@@ -17,13 +17,9 @@ var xmlContent []byte
 var showDetails bool
 var showFilename bool
 var displayFlag bool
-var startDate string
-var endDate string
-var filter string
-var startDateUTC string
-var endDateUTC string
-var summary string
 var toFile bool
+var filter string
+var searchterm string
 
 //var colorBlock string = "█"
 var colorBlock string = "|"

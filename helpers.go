@@ -221,12 +221,10 @@ func filterMatch(fullName string) bool {
 	return re.FindString(fullName) != ""
 }
 
-func deleteContact(abNumber string, contactFilename string) (status string) {
+func deleteContact(abNo int, contactFilename string) (status string) {
 	if contactFilename == "" {
 		log.Fatal("No contact filename given")
 	}
-
-	abNo, _ := strconv.ParseInt(abNumber, 0, 64)
 
 	req, _ := http.NewRequest("DELETE", config.Addressbooks[abNo].Url+contactFilename, nil)
 	req.SetBasicAuth(config.Addressbooks[abNo].Username, config.Addressbooks[abNo].Password)
@@ -242,9 +240,11 @@ func deleteContact(abNumber string, contactFilename string) (status string) {
 	return
 }
 
-func dumpContact(abNumber string, contactFilename string, toFile bool) (status string) {
-	abNo, _ := strconv.ParseInt(abNumber, 0, 64)
+func dumpContact(abNo int, contactFilename string, toFile bool) (status string) {
 	//fmt.Println(config.Addressbooks[calNo].Url + eventFilename)
+	if abNo == 1000 {
+		abNo = 0 // use first addressbook if not set
+	}
 
 	req, _ := http.NewRequest("GET", config.Addressbooks[abNo].Url+contactFilename, nil)
 	req.SetBasicAuth(config.Addressbooks[abNo].Username, config.Addressbooks[abNo].Password)
@@ -272,8 +272,7 @@ func dumpContact(abNumber string, contactFilename string, toFile bool) (status s
 	}
 }
 
-func uploadVCF(abNumber string, contactFilePath string, contactEdit bool) (status string) {
-	abNo, _ := strconv.ParseInt(abNumber, 0, 64)
+func uploadVCF(abNo int, contactFilePath string, contactEdit bool) (status string) {
 	//fmt.Println(config.Calendars[calNo].Url + eventFilePath)
 
 	var vcfData string
@@ -340,10 +339,10 @@ func displayVCF() {
 
 }
 
-func editContact(abNumber string, contactFilename string) (status string) {
+func editContact(abNo int, contactFilename string) (status string) {
 	toFile = true
 	contactEdit := true
-	dumpContact(abNumber, contactFilename, toFile)
+	dumpContact(abNo, contactFilename, toFile)
 	//fmt.Println(appointmentEdit)
 	filePath := cacheLocation + "/" + contactFilename
 	fileInfo, err := os.Stat(filePath)
@@ -365,7 +364,7 @@ func editContact(abNumber string, contactFilename string) (status string) {
 	afterMTime := fileInfo.ModTime()
 
 	if beforeMTime.Before(afterMTime) {
-		uploadVCF(abNumber, filePath, contactEdit)
+		uploadVCF(abNo, filePath, contactEdit)
 	} else {
 		log.Fatal("no changes")
 	}
