@@ -97,12 +97,9 @@ func showAddresses(abNo int) {
 }
 
 func createContact(abNo int, contactData string) {
-	//dataArr := strings.Split(appointmentData, " ")
 	curTime := time.Now()
 	d := regexp.MustCompile(`\s[a-z,A-Z]:`)
-	//dataArr := t.SplitAfter(contactData, -1)
 	dataArr := splitAfter(contactData, d) // own function, splitAfter is not supported by regex module
-	//dataArr := re.FindAll(\s+A-Z:, contactData)
 
 	var fullName string
 	var name string

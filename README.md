@@ -43,7 +43,7 @@ Common options:
 
 ### Displaying addressbooks 
 
-This simply displays all contacts from all addressbook:
+This simply displays all contacts from all addressbooks:
 
     qcard
 
@@ -55,59 +55,45 @@ This displays all avaliable addressbooks with their numbers and colors:
 
     qcaŕd -l
 
+This searches for contacts containing "doe" in all addressbooks:
+    
+    qcard -s doe
+
+The DetailThreshold parameter in the configuration file determines when all contact details are shown for a given numer of search results. For instance, on DetailTreshold = 3 you get all details if 3 or less contacts are found for the searchword "doe".
+
+Here's a list of all attributes:
+
+   **M:**&emsp;phoneCell
+   **P:**&emsp;phoneHome
+   **p:**&emsp;phoneWork
+   **E:**&emsp;emailHome
+   **e:**&emsp;emailWork
+   **A:**&emsp;addressHome
+   **a:**&emsp;addressWork
+   **O:**&emsp;Organisation
+   **B:**&emsp;Birthday
+   **T:**&emsp;Title
+   **n:**&emsp;Note
+
 ### Add new contact
 
-This creates an appointment on 01.12.2021 from 15:00h to 17:00h with the
-summary of "Tea Time":
+This creates a contact for John Doe with a private mobile phone number and an email address in address book 1:
 
-    qcal -n "20211201 1500 1700 Tea Time"
+    qcard -a 1 -n "John Doe M:+49 172 123123 E:jdoe@data.haus"
 
-This creates a whole day appointment with a yearly recurrence in your second
-calendar (first is 0):
+Just combine the parameters from above like you wish.
 
-    qcal -c 1 -n "20211114 Anne's Birthday" -r y
+### Edit a contact
 
-This creates a multiple day appointment:
+This shows searches for "doe" in addressbook 2 and prints the corresponding filenames
+("fobarxyz.vcf"):
 
-    qcal -n "20210801 20210810 Holiday in Thailand"
+    qcal -a 2 -s doe -f
 
-### Edit an appointment
-
-This shows the next 7 days of appointments from calendar 3 with filenames
-("foobarxyz.ics"):
-
-    qcal -c 2 -7 -f 
-
-This edits the selected iCAL object in your $EDITOR (i.e. vim). When you
+This edits the selected vCard object in your $EDITOR (i.e. vim). When you
 save-quit the modified object is automatically uploaded:
 
-    qcal -c 2 -edit foobarxyz.ics
-
-
-## Integrations
-
-### neomutt / other cli mail tools
-
-You can view received appointments in neomutt with qcal! Put this in your
-mailcap (usually in .config/neomutt):
-
-    text/calendar; qcal -p; copiousoutput
-
-If you also want to be able to import received appointments directly from
-neomutt, put the following two lines in mailcap:
-
-    text/calendar; qcal -c 0 -u %s && notify-send "Appointment created";
-    text/calendar; qcal -p; copiousoutput
-
-The first line is only executed if you press Return. The second line just
-displays the appointment as above.
-
-### Crontab (or Statusline script, Systemd timer, etc.) 
-
-You can get reminders of your appointments 15 mins in advance with this one
-liner:
-
-    [[ $(qcal -cron 15 2>/dev/null) ]] && notify-send "Next Appointment:" "\n $(qcal -cron 15)" || true
+    qcal -c 2 -edit foobarxyz.vcf
 
 
 ## About
