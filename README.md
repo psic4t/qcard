@@ -49,21 +49,13 @@ This simply displays all contacts from all addressbook:
 
 This only shows contacts from addressbook 0:
 
-    qcard -c 0
+    qcard -a 0
 
-This shows all appointments from 01.10.2021, 00:00h to 31.10.2021, 23:59:59
-(Note: This is in UTC!):
+This displays all avaliable addressbooks with their numbers and colors:
 
-    qcal -s 20211001T000000 -e 20211031T235959
+    qcaŕd -l
 
-This displays all avaliable calendars with their numbers and colors:
-
-    qcal -l
-
-### Add new appointment
-
-Even though the abillity to create new appointments is limited, it is easy to
-create simple appointment types.
+### Add new contact
 
 This creates an appointment on 01.12.2021 from 15:00h to 17:00h with the
 summary of "Tea Time":

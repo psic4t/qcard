@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	//"os"
+	"os"
 	"regexp"
 	"sort"
 	"strconv"
@@ -201,19 +201,22 @@ END:VCARD`
 }
 
 func main() {
+	/*if strings.Contains(os.Args[1], "-") == false {
+		fmt.Println(os.Args[1])
+	}*/
 	toFile := false
 
-	flag.StringVar(&filter, "s", "", "Search term")
+	flag.StringVar(&filter, "s", os.Args[1], "Search term")
 	//flag.BoolVar(&showInfo, "i", false, "Show additional info like description and location for contacts")
 	flag.BoolVar(&showFilename, "f", false, "Show contact filename for editing or deletion")
 	flag.BoolVar(&displayFlag, "p", false, "Print VCF file piped to qcard (for CLI mail tools like mutt)")
 	abNumber := flag.String("a", "all", "Show only single addressbook (number)")
 	version := flag.Bool("v", false, "Show version")
-	showAddressbooks := flag.Bool("l", false, "List configured addressbooks with their corresponding numbers (for \"-c\")")
+	showAddressbooks := flag.Bool("l", false, "List configured addressbooks with their corresponding numbers (for \"-a\")")
 	contactFile := flag.String("u", "", "Upload contact file. Provide filename and use with \"-c\"")
-	contactDelete := flag.String("delete", "", "Delete contact. Get filename with \"-f\" and use with \"-c\"")
-	contactDump := flag.String("d", "", "Dump raw contact data. Get filename with \"-f\" and use with \"-c\"")
-	contactEdit := flag.String("edit", "", "Edit + upload contact data. Get filename with \"-f\" and use with \"-c\"")
+	contactDelete := flag.String("delete", "", "Delete contact. Get filename with \"-f\" and use with \"-a\"")
+	contactDump := flag.String("d", "", "Dump raw contact data. Get filename with \"-f\" and use with \"-a\"")
+	contactEdit := flag.String("edit", "", "Edit + upload contact data. Get filename with \"-f\" and use with \"-a\"")
 	contactNew := flag.String("n", "", "Add a new contact. Check README.md for syntax")
 	flag.Parse()
 	flagset := make(map[string]bool) // map for flag.Visit. get bools to determine set flags
