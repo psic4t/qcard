@@ -26,7 +26,7 @@ var colorBlock string = "|"
 var contactsSlice []contactStruct
 var Colors = [10]string{"\033[0;31m", "\033[0;32m", "\033[1;33m", "\033[1;34m", "\033[1;35m", "\033[1;36m", "\033[1;37m", "\033[1;38m", "\033[1;39m", "\033[1;40m"}
 var showColor bool = true
-var qcardversion string = "0.1.1"
+var qcardversion string = "0.5.0"
 
 const (
 	ConfigDir  = ".config/qcard"
