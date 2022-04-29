@@ -103,6 +103,19 @@ func checkError(e error) {
 	}
 }
 
+func splitAfter(s string, re *regexp.Regexp) (r []string) {
+	re.ReplaceAllStringFunc(s, func(x string) string {
+		s = strings.Replace(s, x, "::"+x, -1)
+		return s
+	})
+	for _, x := range strings.Split(s, "::") {
+		if x != "" {
+			r = append(r, x)
+		}
+	}
+	return
+}
+
 func (e contactStruct) fancyOutput() {
 	if showColor {
 		fmt.Print(e.Color + colorBlock + ColDefault + ` `)
@@ -126,19 +139,27 @@ func (e contactStruct) fancyOutput() {
 		}
 		if e.phoneHome != "" {
 			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`H: ` + e.phoneHome)
+			fmt.Println(`P: ` + e.phoneHome)
 		}
 		if e.emailHome != "" {
 			fmt.Printf(`%2s`, ` `)
 			fmt.Println(`E: ` + e.emailHome)
 		}
+		if e.emailWork != "" {
+			fmt.Printf(`%2s`, ` `)
+			fmt.Println(`e: ` + e.emailWork)
+		}
 		if e.addressHome != "" {
 			fmt.Printf(`%2s`, ` `)
 			fmt.Println(`A: ` + e.addressHome)
 		}
+		if e.addressWork != "" {
+			fmt.Printf(`%2s`, ` `)
+			fmt.Println(`a: ` + e.addressWork)
+		}
 		if e.phoneWork != "" {
 			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`W: ` + e.phoneWork)
+			fmt.Println(`p: ` + e.phoneWork)
 		}
 		if e.birthday != "" {
 			fmt.Printf(`%2s`, ` `)
@@ -147,6 +168,10 @@ func (e contactStruct) fancyOutput() {
 		if e.name != "" {
 			fmt.Printf(`%2s`, ` `)
 			fmt.Println(`N: ` + e.name)
+		}
+		if e.note != "" {
+			fmt.Printf(`%2s`, ` `)
+			fmt.Println(`n: ` + e.note)
 		}
 	}
 
@@ -197,8 +222,11 @@ func filterMatch(fullName string) bool {
 }
 
 func deleteContact(abNumber string, contactFilename string) (status string) {
+	if contactFilename == "" {
+		log.Fatal("No contact filename given")
+	}
+
 	abNo, _ := strconv.ParseInt(abNumber, 0, 64)
-	//fmt.Println(config.Addressbooks[calNo].Url + eventFilename)
 
 	req, _ := http.NewRequest("DELETE", config.Addressbooks[abNo].Url+contactFilename, nil)
 	req.SetBasicAuth(config.Addressbooks[abNo].Username, config.Addressbooks[abNo].Password)

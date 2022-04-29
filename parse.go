@@ -11,28 +11,6 @@ func trimField(field, cutset string) string {
 	return strings.TrimRight(cutsetRem, "\r\n")
 }
 
-func parseEventSummary(eventData *string) string {
-	re, _ := regexp.Compile(`SUMMARY(?:;LANGUAGE=[a-zA-Z\-]+)?.*?\n`)
-	result := re.FindString(*eventData)
-	return trimField(result, `SUMMARY(?:;LANGUAGE=[a-zA-Z\-]+)?:`)
-}
-
-func parseEventDescription(eventData *string) string {
-	re, _ := regexp.Compile(`DESCRIPTION:.*?\n(?:\s+.*?\n)*`)
-
-	resultA := re.FindAllString(*eventData, -1)
-	result := strings.Join(resultA, ", ")
-	//result = strings.Replace(result, "\n", "", -1)
-	result = strings.Replace(result, "\\N", "\n", -1)
-	//better := strings.Replace(re.FindString(result), "\n ", "", -1)
-	//better = strings.Replace(better, "\\n", " ", -1)
-	//better = strings.Replace(better, "\\", "", -1)
-
-	//return trimField(better, "DESCRIPTION:")
-	//return trimField(result, "DESCRIPTION:")
-	return trimField(strings.Replace(result, "\r\n ", "", -1), "DESCRIPTION:")
-}
-
 func parseContactFullName(contactData *string) string {
 	re, _ := regexp.Compile(`\nFN:.*\n`)
 	result := re.FindString(*contactData)
@@ -70,11 +48,24 @@ func parseContactEmailHome(contactData *string) string {
 	return trimField(result, "(?i)EMAIL;TYPE=HOME:")
 }
 
+func parseContactEmailWork(contactData *string) string {
+	re, _ := regexp.Compile(`(?i)EMAIL;TYPE=WORK:.*?\n`)
+	result := re.FindString(*contactData)
+	return trimField(result, "(?i)EMAIL;TYPE=WORK:")
+}
+
 func parseContactAddressHome(contactData *string) string {
 	re, _ := regexp.Compile(`(?i)ADR;TYPE=HOME:.*?\n`)
 	result := re.FindString(*contactData)
 	result = strings.Replace(result, ";;;", "", -1) // remove triple semicola
 	return trimField(result, "(?i)ADR;TYPE=HOME:")
+}
+
+func parseContactAddressWork(contactData *string) string {
+	re, _ := regexp.Compile(`(?i)ADR;TYPE=WORK:.*?\n`)
+	result := re.FindString(*contactData)
+	result = strings.Replace(result, ";;;", "", -1) // remove triple semicola
+	return trimField(result, "(?i)ADR;TYPE=WORK:")
 }
 
 func parseContactBirthday(contactData *string) string {
@@ -117,7 +108,9 @@ func parseMain(contactData *string, contactsSlice *[]contactStruct, href, color 
 			phoneHome:    parseContactPhoneHome(contactData),
 			phoneWork:    parseContactPhoneWork(contactData),
 			emailHome:    parseContactEmailHome(contactData),
+			emailWork:    parseContactEmailWork(contactData),
 			addressHome:  parseContactAddressHome(contactData),
+			addressWork:  parseContactAddressWork(contactData),
 			birthday:     parseContactBirthday(contactData),
 			note:         parseContactNote(contactData),
 		}

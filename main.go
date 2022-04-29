@@ -8,9 +8,13 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	//"os"
+	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 var config = getConf()
@@ -92,6 +96,110 @@ func showAddresses(singleAB string) {
 	}
 }
 
+func createContact(abNo string, contactData string) {
+	//dataArr := strings.Split(appointmentData, " ")
+	curTime := time.Now()
+	d := regexp.MustCompile(`\s[a-z,A-Z]:`)
+	//dataArr := t.SplitAfter(contactData, -1)
+	dataArr := splitAfter(contactData, d) // own function, splitAfter is not supported by regex module
+	//dataArr := re.FindAll(\s+A-Z:, contactData)
+
+	var fullName string
+	var name string
+	var phoneCell string
+	var phoneHome string
+	var phoneWork string
+	var emailHome string
+	var emailWork string
+	var addressHome string
+	var addressWork string
+	var note string
+	var birthday string
+	var organisation string
+	var title string
+
+	newUUID := genUUID()
+
+	for i, e := range dataArr {
+		if i == 0 {
+			fullName = e
+			lastInd := strings.LastIndex(e, " ")              // split name at last space
+			name = e[lastInd+1:] + ";" + e[0:lastInd] + ";;;" // lastname, givenname1 givenname2
+		} else {
+			attr := strings.Split(e, ":")
+
+			switch attr[0] {
+			case " M":
+				phoneCell = "\nTEL;TYPE=CELL:" + attr[1]
+			case " P":
+				phoneHome = "\nTEL;TYPE=HOME:" + attr[1]
+			case " p":
+				phoneWork = "\nTEL;TYPE=WORK:" + attr[1]
+			case " E":
+				emailHome = "\nEMAIL;TYPE=HOME:" + attr[1]
+			case " e":
+				emailWork = "\nEMAIL;TYPE=WORK:" + attr[1]
+			case " A":
+				if strings.Contains(attr[1], ";") == false {
+					log.Fatal("Address must be splitted in Semicola")
+				}
+				addressHome = "\nADR;TYPE=HOME:" + attr[1]
+			case " a":
+				addressWork = "\nADR;TYPE=WORK:" + attr[1]
+			case " O":
+				organisation = "\nORG:" + attr[1]
+			case " B":
+				birthday = "\nBDAY:" + attr[1]
+			case " n":
+				note = "\nNOTE:" + attr[1]
+			case " T":
+				title = "\nTITLE:" + attr[1]
+			}
+		}
+	}
+
+	var contactSkel = `BEGIN:VCARD
+VERSION:3.0
+PRODID:-//qcard
+UID:` + newUUID +
+		emailHome +
+		phoneCell +
+		phoneHome +
+		phoneWork +
+		emailHome +
+		emailWork +
+		addressHome +
+		addressWork +
+		birthday +
+		organisation +
+		note +
+		title + `
+FN:` + fullName + `
+N:` + name + `
+REV:` + curTime.UTC().Format(IcsFormat) + `
+END:VCARD`
+	//fmt.Println(contactSkel)
+	//os.Exit(3)
+
+	newElem := newUUID + `.vcf`
+
+	abNo1, _ := strconv.ParseInt(abNo, 0, 64)
+
+	req, _ := http.NewRequest("PUT", config.Addressbooks[abNo1].Url+newElem, strings.NewReader(contactSkel))
+	req.SetBasicAuth(config.Addressbooks[abNo1].Username, config.Addressbooks[abNo1].Password)
+	req.Header.Add("Content-Type", "application/xml; charset=utf-8")
+
+	cli := &http.Client{}
+	resp, err := cli.Do(req)
+	defer resp.Body.Close()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(resp.Status)
+}
+
 func main() {
 	toFile := false
 
@@ -103,9 +211,10 @@ func main() {
 	version := flag.Bool("v", false, "Show version")
 	showAddressbooks := flag.Bool("l", false, "List configured addressbooks with their corresponding numbers (for \"-c\")")
 	contactFile := flag.String("u", "", "Upload contact file. Provide filename and use with \"-c\"")
-	contactDelete := flag.String("d", "", "Delete contact. Get filename with \"-f\" and use with \"-c\"")
-	contactDump := flag.String("dump", "", "Dump raw contact data. Get filename with \"-f\" and use with \"-c\"")
+	contactDelete := flag.String("delete", "", "Delete contact. Get filename with \"-f\" and use with \"-c\"")
+	contactDump := flag.String("d", "", "Dump raw contact data. Get filename with \"-f\" and use with \"-c\"")
 	contactEdit := flag.String("edit", "", "Edit + upload contact data. Get filename with \"-f\" and use with \"-c\"")
+	contactNew := flag.String("n", "", "Add a new contact. Check README.md for syntax")
 	flag.Parse()
 	flagset := make(map[string]bool) // map for flag.Visit. get bools to determine set flags
 	flag.Visit(func(f *flag.Flag) { flagset[f.Name] = true })
@@ -114,12 +223,14 @@ func main() {
 	}
 	if flagset["l"] {
 		getAbList()
-	} else if flagset["d"] {
+	} else if flagset["delete"] {
 		deleteContact(*abNumber, *contactDelete)
-	} else if flagset["dump"] {
+	} else if flagset["d"] {
 		dumpContact(*abNumber, *contactDump, toFile)
 	} else if flagset["p"] {
 		displayVCF()
+	} else if flagset["n"] {
+		createContact(*abNumber, *contactNew)
 	} else if flagset["edit"] {
 		editContact(*abNumber, *contactEdit)
 	} else if flagset["u"] {

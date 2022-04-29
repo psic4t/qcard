@@ -33,27 +33,14 @@ var showColor bool = true
 var qcardversion string = "0.1.1"
 
 const (
-	ConfigDir      = ".config/qcard"
-	CacheDir       = ".cache/qcard"
-	dateFormat     = "02.01.06"
-	dayMonthFormat = "02.01"
-	timeFormat     = "15:04"
-	RFC822         = "02.01.06 15:04"
-	// ics date format ( describes a whole day)
-	IcsFormat   = "20060102T150405"
-	IcsFormatTZ = "TZID=MST:20060102T150405"
-	//IcsFormatTZ         = "20060102T150405Z -0700"
-	IcsFormatWholeDay   = "20060102"
-	IcsFormatWholeMonth = "200601"
-	IcsFormatMonthDay   = "0102"
-	IcsFormatTime       = "T150405Z"
-	Weekday             = "Mon"
-	IcsFormatYear       = "2006"
-	ColWhite            = "\033[1;37m"
-	ColDefault          = "\033[0m"
-	ColGreen            = "\033[0;32m"
-	ColYellow           = "\033[1;33m"
-	ColBlue             = "\033[1;34m"
+	ConfigDir  = ".config/qcard"
+	CacheDir   = ".cache/qcard"
+	IcsFormat  = "20060102T150405Z"
+	ColWhite   = "\033[1;37m"
+	ColDefault = "\033[0m"
+	ColGreen   = "\033[0;32m"
+	ColYellow  = "\033[1;33m"
+	ColBlue    = "\033[1;34m"
 )
 
 type configStruct struct {
@@ -76,7 +63,9 @@ type contactStruct struct {
 	phoneHome    string
 	phoneWork    string
 	emailHome    string
+	emailWork    string
 	addressHome  string
+	addressWork  string
 	birthday     string
 	note         string
 }

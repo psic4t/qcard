@@ -1,6 +1,6 @@
 # qcard
 
-qcard is a quick addressbook application for CardDAV servers written in Go. In
+qcard is a CLI addressbook application for CardDAV servers written in Go. In
 contrast to other tools it does not cache anything. It can fetch multiple
 servers / addressbooks in parallel which makes it quite fast.
 
