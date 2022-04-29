@@ -64,19 +64,17 @@ The DetailThreshold parameter in the configuration file determines when all cont
 Here's a list of all attributes:
 
 
-````
-**M:**&emsp;phoneCell
-**P:**&emsp;phoneHome
-**p:**&emsp;phoneWork
-**E:**&emsp;emailHome
-**e:**&emsp;emailWork
-**A:**&emsp;addressHome
-**a:**&emsp;addressWork
-**O:**&emsp;Organisation
-**B:**&emsp;Birthday
-**T:**&emsp;Title
-**n:**&emsp;Note
-````
+* **M:**&emsp;phoneCell
+* **P:**&emsp;phoneHome
+* **p:**&emsp;phoneWork
+* **E:**&emsp;emailHome
+* **e:**&emsp;emailWork
+* **A:**&emsp;addressHome
+* **a:**&emsp;addressWork
+* **O:**&emsp;Organisation
+* **B:**&emsp;Birthday
+* **T:**&emsp;Title
+* **n:**&emsp;Note
 
 ### Add new contact
 
