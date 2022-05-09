@@ -43,15 +43,15 @@ func parseContactPhoneWork(contactData *string) string {
 }
 
 func parseContactEmailHome(contactData *string) string {
-	re, _ := regexp.Compile(`(?i)EMAIL(;TYPE=(HOME|INTERNET))?:.*?\n`)
+	re, _ := regexp.Compile(`(?i)EMAIL(;TYPE=(HOME|INTERNET|PREF|INTERNET,HOME))?:.*?\n`)
 	result := re.FindString(*contactData)
-	return trimField(result, "(?i)EMAIL(;TYPE=(HOME|INTERNET))?:")
+	return trimField(result, "(?i)EMAIL(;TYPE=(HOME|INTERNET|PREF|INTERNET,HOME))?:")
 }
 
 func parseContactEmailWork(contactData *string) string {
-	re, _ := regexp.Compile(`(?i)EMAIL;TYPE=WORK:.*?\n`)
+	re, _ := regexp.Compile(`(?i)EMAIL;TYPE=(WORK|INTERNET,WORK):.*?\n`)
 	result := re.FindString(*contactData)
-	return trimField(result, "(?i)EMAIL;TYPE=WORK:")
+	return trimField(result, "(?i)EMAIL;TYPE=(WORK|INTERNET,WORK):")
 }
 
 func parseContactAddressHome(contactData *string) string {
