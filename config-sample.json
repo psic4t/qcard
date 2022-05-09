@@ -6,5 +6,6 @@
 			"Password":"supersecret"
 		}
 	],
-        "DetailThreshold": 3
+        "DetailThreshold": 3,
+	"SortByLastname": false
 }

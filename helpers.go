@@ -133,7 +133,11 @@ func (e contactStruct) fancyOutput() {
 		if showColor {
 			fmt.Print(e.Color + colorBlock + ColDefault + ` `)
 		}
-		fmt.Println(e.fullName)
+		if config.SortByLastname {
+			fmt.Println(e.name)
+		} else {
+			fmt.Println(e.fullName)
+		}
 	}
 
 	if showDetails {

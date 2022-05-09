@@ -47,6 +47,7 @@ type configStruct struct {
 		Password string
 	}
 	DetailThreshold int
+	SortByLastname  bool
 }
 
 type contactStruct struct {

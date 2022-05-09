@@ -80,8 +80,11 @@ func showAddresses(abNo int) {
 
 	// TODO: Allow sort by first and last name
 	sort.Slice(contactsSlice, func(i, j int) bool {
-		return contactsSlice[i].fullName < contactsSlice[j].fullName
-		//return contactsSlice[i].name < contactsSlice[j].name
+		if config.SortByLastname {
+			return contactsSlice[i].name < contactsSlice[j].name
+		} else {
+			return contactsSlice[i].fullName < contactsSlice[j].fullName
+		}
 	})
 
 	if len(contactsSlice) == 0 {
