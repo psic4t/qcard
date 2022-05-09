@@ -91,6 +91,10 @@ func showAddresses(abNo int) {
 		showDetails = true
 	}
 
+	if *showEmailOnly {
+		fmt.Println("Searching...")
+	}
+
 	for _, e := range contactsSlice {
 		e.fancyOutput() // pretty print
 	}
@@ -213,6 +217,7 @@ func main() {
 	contactDump := flag.String("d", "", "Dump raw contact data. Get filename with \"-f\" and use with \"-a\"")
 	contactEdit := flag.String("edit", "", "Edit + upload contact data. Get filename with \"-f\" and use with \"-a\"")
 	contactNew := flag.String("n", "", "Add a new contact. Check README.md for syntax")
+	showEmailOnly = flag.Bool("emailonly", false, "Show only email addresses and names without further formatting (for CLI mail tools like mutt)")
 	flag.Parse()
 	flagset := make(map[string]bool) // map for flag.Visit. get bools to determine set flags
 	flag.Visit(func(f *flag.Flag) { flagset[f.Name] = true })

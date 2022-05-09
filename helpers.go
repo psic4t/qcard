@@ -117,61 +117,64 @@ func splitAfter(s string, re *regexp.Regexp) (r []string) {
 }
 
 func (e contactStruct) fancyOutput() {
-	if showColor {
-		fmt.Print(e.Color + colorBlock + ColDefault + ` `)
-	}
-	fmt.Println(e.fullName)
 	//fmt.Println(e.name)
 	//fmt.Printf(`%5s`, ` `)
 	//fmt.Println(` M: ` + e.phoneCell)
-	if showDetails {
-		if e.title != "" {
-			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`T: ` + e.title)
-		}
-		if e.organisation != "" {
-			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`O: ` + e.organisation)
-		}
-		if e.phoneCell != "" {
-			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`M: ` + e.phoneCell)
-		}
-		if e.phoneHome != "" {
-			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`P: ` + e.phoneHome)
-		}
+	if *showEmailOnly {
+		showDetails = false
+
 		if e.emailHome != "" {
-			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`E: ` + e.emailHome)
+			fmt.Printf("%s\t%s\tHOME\n", e.emailHome, e.fullName)
 		}
 		if e.emailWork != "" {
-			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`e: ` + e.emailWork)
+			fmt.Printf("%s\t%s\tWORK\n", e.emailWork, e.fullName)
 		}
-		if e.addressHome != "" {
-			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`A: ` + e.addressHome)
+	} else {
+		if showColor {
+			fmt.Print(e.Color + colorBlock + ColDefault + ` `)
 		}
-		if e.addressWork != "" {
-			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`a: ` + e.addressWork)
+		fmt.Println(e.fullName)
+	}
+
+	if showDetails {
+		if e.title != "" {
+			fmt.Println(`  T: ` + e.title)
+		}
+		if e.organisation != "" {
+			fmt.Println(`  O: ` + e.organisation)
+		}
+		if e.phoneCell != "" {
+			//fmt.Printf(`%2s`, ` `)
+			//fmt.Printf("%2s%s\n", " ", "M: "+e.phoneCell)
+			fmt.Println("  M: " + e.phoneCell)
+			//fmt.Println(`M: ` + e.phoneCell)
+		}
+		if e.phoneHome != "" {
+			fmt.Println(`  P: ` + e.phoneHome)
 		}
 		if e.phoneWork != "" {
-			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`p: ` + e.phoneWork)
+			fmt.Println(`  p: ` + e.phoneWork)
+		}
+		if e.emailHome != "" {
+			fmt.Println(`  E: ` + e.emailHome)
+		}
+		if e.emailWork != "" {
+			fmt.Println(`  e: ` + e.emailWork)
+		}
+		if e.addressHome != "" {
+			fmt.Println(`  A: ` + e.addressHome)
+		}
+		if e.addressWork != "" {
+			fmt.Println(`  a: ` + e.addressWork)
 		}
 		if e.birthday != "" {
-			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`B: ` + e.birthday)
+			fmt.Println(`  B: ` + e.birthday)
 		}
 		if e.name != "" {
-			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`N: ` + e.name)
+			fmt.Println(`  N: ` + e.name)
 		}
 		if e.note != "" {
-			fmt.Printf(`%2s`, ` `)
-			fmt.Println(`n: ` + e.note)
+			fmt.Println(`  n: ` + e.note)
 		}
 	}
 
@@ -187,11 +190,8 @@ func (e contactStruct) vcfOutput() {
 	fmt.Println(`Contact
 =======`)
 	//fmt.Printf(`Summary:%6s`, ` `)
-	//fmt.Print(e.Summary)
-	fmt.Printf(`Full Name:%2s`+e.fullName, ` `)
-	fmt.Println(``)
-	fmt.Printf(`Cell:%5s`+e.phoneCell, ` `)
-	fmt.Println(``)
+	fmt.Printf("Full Name:\t%s\n", e.fullName)
+	fmt.Printf("Cell:\t\t%s\n", e.phoneCell)
 }
 
 func genUUID() (uuid string) {

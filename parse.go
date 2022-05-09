@@ -43,9 +43,9 @@ func parseContactPhoneWork(contactData *string) string {
 }
 
 func parseContactEmailHome(contactData *string) string {
-	re, _ := regexp.Compile(`(?i)EMAIL;TYPE=HOME:.*?\n`)
+	re, _ := regexp.Compile(`(?i)EMAIL(;TYPE=(HOME|INTERNET))?:.*?\n`)
 	result := re.FindString(*contactData)
-	return trimField(result, "(?i)EMAIL;TYPE=HOME:")
+	return trimField(result, "(?i)EMAIL(;TYPE=(HOME|INTERNET))?:")
 }
 
 func parseContactEmailWork(contactData *string) string {

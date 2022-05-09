@@ -2,7 +2,7 @@
 
 qcard is a CLI addressbook application for CardDAV servers written in Go. In
 contrast to other tools it does not cache anything. It can fetch multiple
-servers / addressbooks in parallel which makes it quite fast.
+servers / addressbooks in parallel what makes it quite fast.
 
 Its main purpose is displaying addressbook data. Nevertheless it supports basic
 creation and editing of entries.
@@ -59,22 +59,22 @@ This searches for contacts containing "doe" in all addressbooks:
     
     qcard -s doe
 
-The DetailThreshold parameter in the configuration file determines when all contact details are shown for a given numer of search results. For instance, on DetailTreshold = 3 you get all details if 3 or less contacts are found for the searchword "doe".
+The DetailThreshold parameter in the configuration file determines when all contact details are shown for a given numer of search results. For instance, on DetailThreshold = 3 you get all details if 3 or less contacts are found for the searchword "doe".
 
 Here's a list of all attributes:
 
 
-* **M:**&emsp;phoneCell
-* **P:**&emsp;phoneHome
-* **p:**&emsp;phoneWork
-* **E:**&emsp;emailHome
-* **e:**&emsp;emailWork
-* **A:**&emsp;addressHome
-* **a:**&emsp;addressWork
-* **O:**&emsp;Organisation
-* **B:**&emsp;Birthday
-* **T:**&emsp;Title
-* **n:**&emsp;Note
+* **M:** phoneCell
+* **P:** phoneHome
+* **p:** phoneWork
+* **E:** emailHome
+* **e:** emailWork
+* **A:** addressHome
+* **a:** addressWork
+* **O:** Organisation
+* **B:** Birthday
+* **T:** Title
+* **n:** Note
 
 ### Add new contact
 
@@ -89,12 +89,22 @@ Just combine the parameters from above like you wish.
 This shows searches for "doe" in addressbook 2 and prints the corresponding filenames
 ("fobarxyz.vcf"):
 
-    qcal -a 2 -s doe -f
+    qcard -a 2 -s doe -f
 
 This edits the selected vCard object in your $EDITOR (i.e. vim). When you
 save-quit the modified object is automatically uploaded:
 
-    qcal -c 2 -edit foobarxyz.vcf
+    qcard -c 2 -edit foobarxyz.vcf
+
+## Integrations
+
+### neomutt / other cli mail tools
+
+To use qcard as your addressbook in neomutt, put the following in your neomuttrc:
+
+    set query_command= "qcard -s '%s' -emailonly"
+    bind editor <Tab> complete-query
+    bind editor ^T complete
 
 
 ## About

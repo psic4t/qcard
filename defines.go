@@ -16,6 +16,7 @@ var timezone, _ = time.Now().Zone()
 var xmlContent []byte
 var showDetails bool
 var showFilename bool
+var showEmailOnly *bool
 var displayFlag bool
 var toFile bool
 var filter string
@@ -26,7 +27,7 @@ var colorBlock string = "|"
 var contactsSlice []contactStruct
 var Colors = [10]string{"\033[0;31m", "\033[0;32m", "\033[1;33m", "\033[1;34m", "\033[1;35m", "\033[1;36m", "\033[1;37m", "\033[1;38m", "\033[1;39m", "\033[1;40m"}
 var showColor bool = true
-var qcardversion string = "0.5.0"
+var qcardversion string = "0.6.0"
 
 const (
 	ConfigDir  = ".config/qcard"
