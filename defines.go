@@ -66,6 +66,7 @@ type contactStruct struct {
 	addressHome  string
 	addressWork  string
 	birthday     string
+	nickname     string
 	note         string
 }
 

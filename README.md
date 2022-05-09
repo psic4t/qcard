@@ -75,6 +75,7 @@ Here's a list of all attributes:
 * **B:** Birthday
 * **T:** Title
 * **R:** Role
+* **K:** Nickname
 * **n:** Note
 
 ### Add new contact
