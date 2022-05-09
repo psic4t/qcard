@@ -162,7 +162,7 @@ func createContact(abNo int, contactData string) {
 				title = "\nTITLE:" + attr[1]
 			case " R":
 				role = "\nROLE:" + attr[1]
-			case " K":
+			case " I":
 				role = "\nNICKNAME:" + attr[1]
 			}
 		}

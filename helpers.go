@@ -177,7 +177,7 @@ func (e contactStruct) fancyOutput() {
 			fmt.Println(`  B: ` + e.birthday)
 		}
 		if e.nickname != "" {
-			fmt.Println(`  B: ` + e.nickname)
+			fmt.Println(`  I: ` + e.nickname)
 		}
 		if e.name != "" {
 			fmt.Println(`  N: ` + e.name)
