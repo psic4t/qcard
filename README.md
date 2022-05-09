@@ -74,6 +74,7 @@ Here's a list of all attributes:
 * **O:** Organisation
 * **B:** Birthday
 * **T:** Title
+* **R:** Role
 * **n:** Note
 
 ### Add new contact

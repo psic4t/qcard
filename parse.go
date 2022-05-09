@@ -92,6 +92,12 @@ func parseContactTitle(contactData *string) string {
 	return trimField(result, "(?i)TITLE:")
 }
 
+func parseContactRole(contactData *string) string {
+	re, _ := regexp.Compile(`(?i)ROLE:.*?\n`)
+	result := re.FindString(*contactData)
+	return trimField(result, "(?i)ROLE:")
+}
+
 func parseMain(contactData *string, contactsSlice *[]contactStruct, href, color string) {
 	//fmt.Println(parseContactName(contactData))
 	fullName := parseContactFullName(contactData)
@@ -103,6 +109,7 @@ func parseMain(contactData *string, contactsSlice *[]contactStruct, href, color 
 			fullName:     fullName,
 			name:         parseContactName(contactData),
 			title:        parseContactTitle(contactData),
+			role:         parseContactRole(contactData),
 			organisation: parseContactOrg(contactData),
 			phoneCell:    parseContactPhoneCell(contactData),
 			phoneHome:    parseContactPhoneHome(contactData),

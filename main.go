@@ -121,6 +121,7 @@ func createContact(abNo int, contactData string) {
 	var birthday string
 	var organisation string
 	var title string
+	var role string
 
 	newUUID := genUUID()
 
@@ -158,6 +159,8 @@ func createContact(abNo int, contactData string) {
 				note = "\nNOTE:" + attr[1]
 			case " T":
 				title = "\nTITLE:" + attr[1]
+			case " R":
+				role = "\nROLE:" + attr[1]
 			}
 		}
 	}
@@ -177,7 +180,8 @@ UID:` + newUUID +
 		birthday +
 		organisation +
 		note +
-		title + `
+		title +
+		role + `
 FN:` + fullName + `
 N:` + name + `
 REV:` + curTime.UTC().Format(IcsFormat) + `

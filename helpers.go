@@ -147,11 +147,13 @@ func (e contactStruct) fancyOutput() {
 		if e.organisation != "" {
 			fmt.Println(`  O: ` + e.organisation)
 		}
+		if e.role != "" {
+			fmt.Println(`  R: ` + e.role)
+		}
 		if e.phoneCell != "" {
 			//fmt.Printf(`%2s`, ` `)
-			//fmt.Printf("%2s%s\n", " ", "M: "+e.phoneCell)
+			//fmt.Printf("%2s%s\t%s\n", " ", "Mobile ", e.phoneCell)
 			fmt.Println("  M: " + e.phoneCell)
-			//fmt.Println(`M: ` + e.phoneCell)
 		}
 		if e.phoneHome != "" {
 			fmt.Println(`  P: ` + e.phoneHome)

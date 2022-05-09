@@ -56,6 +56,7 @@ type contactStruct struct {
 	fullName     string
 	name         string
 	title        string
+	role         string
 	organisation string
 	phoneCell    string
 	phoneHome    string
