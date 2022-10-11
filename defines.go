@@ -20,6 +20,7 @@ var showEmailOnly *bool
 var displayFlag bool
 var toFile bool
 var filter string
+var orgFilter string
 var searchterm string
 
 //var colorBlock string = "█"

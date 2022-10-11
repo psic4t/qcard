@@ -216,7 +216,8 @@ func main() {
 	if len(os.Args[1:]) > 0 {
 		searchterm = os.Args[1]
 	}
-	flag.StringVar(&filter, "s", "", "Search term")
+	flag.StringVar(&filter, "s", "", "Search (part of) name")
+	flag.StringVar(&orgFilter, "so", "", "Search (part of) organisation")
 	//flag.BoolVar(&showInfo, "i", false, "Show additional info like description and location for contacts")
 	flag.BoolVar(&showFilename, "f", false, "Show contact filename for editing or deletion")
 	flag.BoolVar(&displayFlag, "p", false, "Print VCF file piped to qcard (for CLI mail tools like mutt)")
@@ -233,9 +234,10 @@ func main() {
 	flagset := make(map[string]bool) // map for flag.Visit. get bools to determine set flags
 	flag.Visit(func(f *flag.Flag) { flagset[f.Name] = true })
 
+	//if *showAddressbooks {
+	//}
+	//if flagset["l"] {
 	if *showAddressbooks {
-	}
-	if flagset["l"] {
 		getAbList()
 	} else if flagset["delete"] {
 		deleteContact(*abNo, *contactDelete)

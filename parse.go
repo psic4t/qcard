@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -42,14 +43,49 @@ func parseContactPhoneWork(contactData *string) string {
 	return trimField(result, "(?i)TEL;TYPE=WORK:")
 }
 
-func parseContactEmailHome(contactData *string) string {
-	re, _ := regexp.Compile(`(?i)EMAIL(;TYPE=(HOME|INTERNET|PREF|INTERNET,HOME))?:.*?\n`)
+func parseContactEmail(contactData *string) string {
+	var emailType string
+	re, _ := regexp.Compile(`(?i)EMAIL(;TYPE=(.*))?:.*?\n`)
+	parts := re.FindStringSubmatch(*contactData)
+
+	if len(parts) > 1 {
+		types := strings.Split(parts[2], ",")
+		for _, i := range types {
+			//fmt.Println(i)
+			switch strings.ToLower(i) {
+			case "internet":
+				emailType = "home"
+			case "home":
+				emailType = "home"
+			case "pref":
+				emailType = "home"
+			case "work":
+				emailType = "work"
+			}
+		}
+	}
+
+	fmt.Println(emailType)
 	result := re.FindString(*contactData)
-	return trimField(result, "(?i)EMAIL(;TYPE=(HOME|INTERNET|PREF|INTERNET,HOME))?:")
+	return trimField(result, "(?i)EMAIL(;TYPE=(.*))?:")
+}
+
+func parseContactEmailHome(contactData *string) string {
+	/*workre, _ := regexp.Compile(`(?i)EMAIL;TYPE=(.*WORK.*):.*?\n`) // check, if work email
+	if workre.FindString(*contactData) != "" {
+		fmt.Println("yes")
+		return "" // if work email, get out
+	}*/
+	re, _ := regexp.Compile(`(?i)EMAIL(;TYPE=(HOME|INTERNET|PREF|INTERNET,HOME|HOME,INTERNET))?:.*?\n`)
+	//re, _ := regexp.Compile(`(?i)EMAIL(;TYPE=(.*))?:.*?\n`)
+	result := re.FindString(*contactData)
+	return trimField(result, "(?i)EMAIL(;TYPE=(.*))?:")
+
 }
 
 func parseContactEmailWork(contactData *string) string {
-	re, _ := regexp.Compile(`(?i)EMAIL;TYPE=(WORK|INTERNET,WORK):.*?\n`)
+	//re, _ := regexp.Compile(`(?i)EMAIL;TYPE=(WORK|INTERNET,WORK):.*?\n`)
+	re, _ := regexp.Compile(`(?i)EMAIL;TYPE=(.*WORK.*):.*?\n`)
 	result := re.FindString(*contactData)
 	return trimField(result, "(?i)EMAIL;TYPE=(WORK|INTERNET,WORK):")
 }
@@ -107,8 +143,11 @@ func parseContactNickname(contactData *string) string {
 func parseMain(contactData *string, contactsSlice *[]contactStruct, href, color string) {
 	//fmt.Println(parseContactName(contactData))
 	fullName := parseContactFullName(contactData)
+	organisation := parseContactOrg(contactData)
 
-	if (filter == "") || (filterMatch(fullName) == true) {
+	//if flagset["so"] {
+	// TODO: How to filter with name and org?
+	if (filter == "") || ((filterMatch(fullName) == true) || (filterOrgMatch(organisation) == true)) {
 		data := contactStruct{
 			Href:         href,
 			Color:        color,
@@ -116,7 +155,7 @@ func parseMain(contactData *string, contactsSlice *[]contactStruct, href, color 
 			name:         parseContactName(contactData),
 			title:        parseContactTitle(contactData),
 			role:         parseContactRole(contactData),
-			organisation: parseContactOrg(contactData),
+			organisation: organisation,
 			phoneCell:    parseContactPhoneCell(contactData),
 			phoneHome:    parseContactPhoneHome(contactData),
 			phoneWork:    parseContactPhoneWork(contactData),

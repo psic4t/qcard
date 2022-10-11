@@ -230,6 +230,11 @@ func filterMatch(fullName string) bool {
 	return re.FindString(fullName) != ""
 }
 
+func filterOrgMatch(org string) bool {
+	re, _ := regexp.Compile(`(?i)` + orgFilter)
+	return re.FindString(org) != ""
+}
+
 func deleteContact(abNo int, contactFilename string) (status string) {
 	if contactFilename == "" {
 		log.Fatal("No contact filename given")
