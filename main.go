@@ -9,8 +9,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"regexp"
 	"sort"
+
 	//"strconv"
 	"strings"
 	"sync"
@@ -34,7 +36,22 @@ func fetchAbData(abNo int, wg *sync.WaitGroup) {
 
 	//fmt.Println(xmlBody)
 	req, err := http.NewRequest("REPORT", config.Addressbooks[abNo].Url, strings.NewReader(xmlBody))
-	req.SetBasicAuth(config.Addressbooks[abNo].Username, config.Addressbooks[abNo].Password)
+
+	var pw string
+	if config.Addressbooks[abNo].PasswordCmd == "" {
+		pw = config.Addressbooks[abNo].Password
+	} else {
+		cmd := exec.Command("sh", "-c", config.Addressbooks[abNo].PasswordCmd)
+		cmd.Stdin = os.Stdin
+		output, err := cmd.Output()
+		if err != nil {
+			log.Fatal(err)
+		}
+		pw = strings.TrimSpace(string(output))
+	}
+
+	req.SetBasicAuth(config.Addressbooks[abNo].Username, pw)
+
 	req.Header.Add("Content-Type", "application/xml; charset=utf-8")
 	req.Header.Add("Depth", "1") // needed for SabreDAV
 	req.Header.Add("Prefer", "return-minimal")

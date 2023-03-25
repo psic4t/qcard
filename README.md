@@ -108,6 +108,13 @@ To use qcard as your addressbook in neomutt, put the following in your neomuttrc
     bind editor <Tab> complete-query
     bind editor ^T complete
 
+### External password command
+
+Instead of putting your password in the config file you can specify an
+external command to resolve your password. Put a line like this in your
+addressbook config and leave the "Password" field empty:
+
+    "PasswordCmd":"rbw get calendar-provider"
 
 ## About
 
