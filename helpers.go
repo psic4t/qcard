@@ -39,7 +39,7 @@ func getConf() *configStruct {
 
 func getAbProps(calNo int, p *[]calProps, wg *sync.WaitGroup) {
 	req, err := http.NewRequest("PROPFIND", config.Addressbooks[calNo].Url, nil)
-	req.SetBasicAuth(config.Addressbooks[calNo].Username, config.Addressbooks[calNo].Password)
+	req.SetBasicAuth(config.Addressbooks[calNo].Username, config.Addressbooks[calNo].password())
 
 	/*tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -241,7 +241,7 @@ func deleteContact(abNo int, contactFilename string) (status string) {
 	}
 
 	req, _ := http.NewRequest("DELETE", config.Addressbooks[abNo].Url+contactFilename, nil)
-	req.SetBasicAuth(config.Addressbooks[abNo].Username, config.Addressbooks[abNo].Password)
+	req.SetBasicAuth(config.Addressbooks[abNo].Username, config.Addressbooks[abNo].password())
 
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
@@ -261,7 +261,7 @@ func dumpContact(abNo int, contactFilename string, toFile bool) (status string) 
 	}
 
 	req, _ := http.NewRequest("GET", config.Addressbooks[abNo].Url+contactFilename, nil)
-	req.SetBasicAuth(config.Addressbooks[abNo].Username, config.Addressbooks[abNo].Password)
+	req.SetBasicAuth(config.Addressbooks[abNo].Username, config.Addressbooks[abNo].password())
 
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
@@ -319,7 +319,7 @@ func uploadVCF(abNo int, contactFilePath string, contactEdit bool) (status strin
 		}
 	}
 	req, _ := http.NewRequest("PUT", config.Addressbooks[abNo].Url+contactFileName, strings.NewReader(contactVCF))
-	req.SetBasicAuth(config.Addressbooks[abNo].Username, config.Addressbooks[abNo].Password)
+	req.SetBasicAuth(config.Addressbooks[abNo].Username, config.Addressbooks[abNo].password())
 	req.Header.Add("Content-Type", "text/calendar; charset=utf-8")
 
 	cli := &http.Client{}
@@ -384,4 +384,18 @@ func editContact(abNo int, contactFilename string) (status string) {
 	}
 
 	return
+}
+
+func (a *addressBook) password() string {
+	if a.PasswordCmd == "" {
+		return a.Password
+	} else {
+		cmd := exec.Command("sh", "-c", a.PasswordCmd)
+		cmd.Stdin = os.Stdin
+		output, err := cmd.Output()
+		if err != nil {
+			log.Fatal(err)
+		}
+		return strings.TrimSpace(string(output))
+	}
 }

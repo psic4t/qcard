@@ -41,13 +41,15 @@ const (
 	ColBlue    = "\033[1;34m"
 )
 
+type addressBook struct {
+	Url         string
+	Username    string
+	Password    string
+	PasswordCmd string
+}
+
 type configStruct struct {
-	Addressbooks []struct {
-		Url         string
-		Username    string
-		Password    string
-		PasswordCmd string
-	}
+	Addressbooks    []addressBook
 	DetailThreshold int
 	SortByLastname  bool
 }
