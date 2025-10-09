@@ -299,13 +299,11 @@ func uploadVCF(abNo int, contactFilePath string, contactEdit bool) (status strin
 		for scanner.Scan() {
 			vcfData += scanner.Text() + "\n"
 		}
-		//eventICS, _ = explodeEvent(&icsData)
 		contactVCF = vcfData
 		contactFileName = genUUID() + `.ics`
 		fmt.Println(contactVCF)
 
 	} else {
-		//eventICS, err := ioutil.ReadFile(cacheLocation + "/" + eventFilename)
 		contactVCFByte, err := os.ReadFile(contactFilePath)
 		if err != nil {
 			log.Fatal(err)

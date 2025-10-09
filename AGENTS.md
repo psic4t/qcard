@@ -13,8 +13,8 @@
 - `golangci-lint run` if golangci-lint is installed
 
 ## Test Commands
-- `go test ./...` to run all tests
-- `go test -run TestName` for single test (no tests currently exist)
+- `go test ./...` to run all tests (none currently exist)
+- `go test -run TestName` for single test (none currently exist)
 
 ## Code Style Guidelines
 - Follow standard Go formatting: use `go fmt`
@@ -25,8 +25,10 @@
 - No unnecessary comments; code should be self-explanatory
 - Use sync.WaitGroup for concurrency as in fetchAbData
 - Constants for colors and formats as in defines.go
+- Methods on structs use receiver in camelCase, e.g., (e contactStruct) fancyOutput()
+- HTTP requests: check errors before deferring resp.Body.Close()
 
 ## Common Fixes
 - Deprecated `ioutil` replaced with `io` and `os` (e.g., `ioutil.ReadFile` -> `os.ReadFile`)
 - Remove unused variables/functions (e.g., unused `err`, `versionLocation`)
-- Check errors before deferring `resp.Body.Close()` in HTTP requests
+- Ensure proper error handling in HTTP requests
