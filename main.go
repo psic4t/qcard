@@ -1,7 +1,6 @@
 package main
 
 import (
-	// 	"bytes"
 	"encoding/xml"
 	"flag"
 	"fmt"
@@ -12,7 +11,6 @@ import (
 	"regexp"
 	"sort"
 
-	//"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -203,11 +201,10 @@ END:VCARD`
 
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
-	defer resp.Body.Close()
-
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer resp.Body.Close()
 
 	fmt.Println(resp.Status)
 }

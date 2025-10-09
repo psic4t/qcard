@@ -245,10 +245,10 @@ func deleteContact(abNo int, contactFilename string) (status string) {
 
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer resp.Body.Close()
 	fmt.Println(resp.Status)
 
 	return
@@ -265,10 +265,10 @@ func dumpContact(abNo int, contactFilename string, toFile bool) (status string) 
 
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer resp.Body.Close()
 	//fmt.Println(resp.Status)
 	xmlContent, _ := io.ReadAll(resp.Body)
 
@@ -322,10 +322,10 @@ func uploadVCF(abNo int, contactFilePath string, contactEdit bool) (status strin
 
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer resp.Body.Close()
 	fmt.Println(resp.Status)
 
 	return
