@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -21,7 +21,7 @@ import (
 )
 
 func getConf() *configStruct {
-	configData, err := ioutil.ReadFile(configLocation)
+	configData, err := os.ReadFile(configLocation)
 	if err != nil {
 		fmt.Print("Config not found. \n\nPlease copy config-sample.json to ~/.config/qcard/config.json and modify it accordingly.\n\n")
 		log.Fatal(err)
@@ -52,7 +52,7 @@ func getAbProps(calNo int, p *[]calProps, wg *sync.WaitGroup) {
 		log.Fatal(err)
 	}
 
-	xmlContent, _ := ioutil.ReadAll(resp.Body)
+	xmlContent, _ := io.ReadAll(resp.Body)
 	defer resp.Body.Close()
 
 	xmlProps := xmlProps{}
@@ -270,12 +270,12 @@ func dumpContact(abNo int, contactFilename string, toFile bool) (status string) 
 		log.Fatal(err)
 	}
 	//fmt.Println(resp.Status)
-	xmlContent, _ := ioutil.ReadAll(resp.Body)
+	xmlContent, _ := io.ReadAll(resp.Body)
 
 	if toFile {
 		// create cache dir if not exists
 		os.MkdirAll(cacheLocation, os.ModePerm)
-		err := ioutil.WriteFile(cacheLocation+"/"+contactFilename, xmlContent, 0644)
+		err := os.WriteFile(cacheLocation+"/"+contactFilename, xmlContent, 0644)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -306,7 +306,7 @@ func uploadVCF(abNo int, contactFilePath string, contactEdit bool) (status strin
 
 	} else {
 		//eventICS, err := ioutil.ReadFile(cacheLocation + "/" + eventFilename)
-		contactVCFByte, err := ioutil.ReadFile(contactFilePath)
+		contactVCFByte, err := os.ReadFile(contactFilePath)
 		if err != nil {
 			log.Fatal(err)
 		}

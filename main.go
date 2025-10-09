@@ -5,7 +5,7 @@ import (
 	"encoding/xml"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -47,7 +47,7 @@ func fetchAbData(abNo int, wg *sync.WaitGroup) {
 		log.Fatal(err)
 	}
 
-	xmlContent, _ := ioutil.ReadAll(resp.Body)
+	xmlContent, _ := io.ReadAll(resp.Body)
 	defer resp.Body.Close()
 
 	//fmt.Println(string(xmlContent))
@@ -215,10 +215,6 @@ END:VCARD`
 func main() {
 	toFile := false
 
-	if len(os.Args[1:]) > 0 {
-		searchterm = os.Args[1]
-	}
-	flag.StringVar(&filter, "s", "", "Search (part of) name")
 	flag.StringVar(&orgFilter, "so", "", "Search (part of) organisation")
 	//flag.BoolVar(&showInfo, "i", false, "Show additional info like description and location for contacts")
 	flag.BoolVar(&showFilename, "f", false, "Show contact filename for editing or deletion")
@@ -232,9 +228,21 @@ func main() {
 	contactEdit := flag.String("edit", "", "Edit + upload contact data. Get filename with \"-f\" and use with \"-a\"")
 	contactNew := flag.String("n", "", "Add a new contact. Check README.md for syntax")
 	showEmailOnly = flag.Bool("emailonly", false, "Show only email addresses and names without further formatting (for CLI mail tools like mutt)")
+
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage: qcard [options] [searchterm]\n\n")
+		fmt.Fprintf(os.Stderr, "Options:\n")
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
+
 	flag.Parse()
 	flagset := make(map[string]bool) // map for flag.Visit. get bools to determine set flags
 	flag.Visit(func(f *flag.Flag) { flagset[f.Name] = true })
+
+	if len(flag.Args()) > 0 {
+		filter = flag.Args()[0]
+	}
 
 	//if *showAddressbooks {
 	//}
