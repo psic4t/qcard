@@ -57,7 +57,7 @@ This displays all avaliable addressbooks with their numbers and colors:
 
 This searches for contacts containing "doe" in all addressbooks:
     
-    qcard -s doe
+    qcard doe
 
 The DetailThreshold parameter in the configuration file determines when all contact details are shown for a given numer of search results. For instance, on DetailThreshold = 3 you get all details if 3 or less contacts are found for the searchword "doe".
 
@@ -91,12 +91,12 @@ Just combine the parameters from above like you wish.
 This shows searches for "doe" in addressbook 2 and prints the corresponding filenames
 ("fobarxyz.vcf"):
 
-    qcard -a 2 -s doe -f
+    qcard -a 2 -f doe
 
 This edits the selected vCard object in your $EDITOR (i.e. vim). When you
 save-quit the modified object is automatically uploaded:
 
-    qcard -c 2 -edit foobarxyz.vcf
+    qcard -a 2 -edit foobarxyz.vcf
 
 ## Integrations
 
@@ -104,7 +104,7 @@ save-quit the modified object is automatically uploaded:
 
 To use qcard as your addressbook in neomutt, put the following in your neomuttrc:
 
-    set query_command= "qcard -s '%s' -emailonly"
+    set query_command= "qcard -emailonly '%s'"
     bind editor <Tab> complete-query
     bind editor ^T complete
 
