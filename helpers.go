@@ -47,12 +47,13 @@ func getAbProps(calNo int, p *[]calProps, wg *sync.WaitGroup) {
 	cli := &http.Client{Transport: tr}*/
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
+
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer resp.Body.Close()
 
 	xmlContent, _ := io.ReadAll(resp.Body)
+	defer resp.Body.Close()
 
 	xmlProps := xmlProps{}
 	err = xml.Unmarshal(xmlContent, &xmlProps)
@@ -68,7 +69,7 @@ func getAbProps(calNo int, p *[]calProps, wg *sync.WaitGroup) {
 	}
 	*p = append(*p, thisCal)
 
-	return
+	wg.Done()
 }
 
 func getAbList() {
@@ -94,6 +95,25 @@ func getAbList() {
 		fmt.Println(`[` + fmt.Sprintf("%v", i) + `] - ` + Colors[i] + colorBlock + ColDefault +
 			` ` + p[i].displayName + ` (` + u.Hostname() + `)`)
 	}
+}
+
+func checkError(e error) {
+	if e != nil {
+		fmt.Println(e)
+	}
+}
+
+func splitAfter(s string, re *regexp.Regexp) (r []string) {
+	re.ReplaceAllStringFunc(s, func(x string) string {
+		s = strings.Replace(s, x, "::"+x, -1)
+		return s
+	})
+	for _, x := range strings.Split(s, "::") {
+		if x != "" {
+			r = append(r, x)
+		}
+	}
+	return
 }
 
 func (e contactStruct) fancyOutput() {
@@ -174,19 +194,6 @@ func (e contactStruct) fancyOutput() {
 	}
 	//fmt.Println()
 }
-
-func splitAfter(s string, re *regexp.Regexp) (r []string) {
-	re.ReplaceAllStringFunc(s, func(x string) string {
-		s = strings.Replace(s, x, "::"+x, -1)
-		return s
-	})
-	for _, x := range strings.Split(s, "::") {
-		if x != "" {
-			r = append(r, x)
-		}
-	}
-	return
-}
 func (e contactStruct) vcfOutput() {
 	// whole day or greater
 	fmt.Println(`Contact
@@ -238,10 +245,10 @@ func deleteContact(abNo int, contactFilename string) (status string) {
 
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
+	defer resp.Body.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer resp.Body.Close()
 	fmt.Println(resp.Status)
 
 	return
@@ -258,10 +265,10 @@ func dumpContact(abNo int, contactFilename string, toFile bool) (status string) 
 
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
+	defer resp.Body.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer resp.Body.Close()
 	//fmt.Println(resp.Status)
 	xmlContent, _ := io.ReadAll(resp.Body)
 
@@ -317,10 +324,10 @@ func uploadVCF(abNo int, contactFilePath string, contactEdit bool) (status strin
 
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
+	defer resp.Body.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer resp.Body.Close()
 	fmt.Println(resp.Status)
 
 	return
