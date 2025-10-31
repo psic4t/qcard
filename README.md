@@ -118,6 +118,5 @@ addressbook config and leave the "Password" field empty:
 
 ## About
 
-Questions? Ideas? File bugs and TODOs through the [issue
-tracker](https://todo.sr.ht/~psic4t/qcard) or send an email to
-[~psic4t/qcard@todo.sr.ht](mailto:~psic4t/qcard@todo.sr.ht)
+Questions? Ideas? File bugs and TODOs through the issue tracker!
+
